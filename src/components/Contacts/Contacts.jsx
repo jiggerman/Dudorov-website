@@ -2,8 +2,9 @@ import React from 'react';
 import styles from './Contacts.module.css';
 import contactBgImage from '../../assets/images/image-99.png';
 
-const Contacts = () => {
+const Contacts = ({id}) => {
   return (
+    <section id={id} className="contacts">
     <div className={styles.contactsBlock}>
       <div className={styles.container}>
         <h2 className={styles.title}>КОНТАКТЫ</h2>
@@ -45,6 +46,7 @@ const Contacts = () => {
         </div>
       </div>
     </div>
+    </section>
   );
 };
 
