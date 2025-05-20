@@ -1,0 +1,406 @@
+.paintingsBlock {
+  width: 1784px;
+  margin: -90px auto 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+}
+
+.title {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  font-size: 56px;
+  line-height: 1;
+  color: rgba(0, 57, 42, 1);
+  margin-bottom: 108px;
+  text-align: left;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 30px;
+  margin-top: -30px;
+}
+
+.activeButton, .inactiveButton {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  font-size: 24px;
+  background: none;
+  border: none;
+  padding: 0 0 8px 0;
+  cursor: pointer;
+  color: rgba(0, 57, 42, 1);
+  position: relative;
+}
+
+.activeButton::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: rgba(0, 57, 42, 1);
+}
+
+.inactiveButton::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: transparent;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.paintingCard {
+  width: 428px;
+  height: 624px;
+  cursor: pointer;
+}
+
+.imageContainer {
+  width: 428px;
+  height: 428px;
+  overflow: hidden;
+}
+
+.paintingImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.paintingImage:hover {
+  transform: scale(1.03);
+}
+
+.paintingInfo {
+  padding: 24px 0;
+  font-family: 'Manrope', sans-serif;
+}
+
+.paintingTitle {
+  font-weight: 700;
+  font-size: 24px;
+  margin: 0 0 12px 0;
+  color: #000;
+}
+
+.paintingYear,
+.paintingDescription {
+  font-weight: 400;
+  color: #666;
+}
+
+.paintingYear {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.paintingDescription {
+  font-size: 16px;
+}
+
+.loadMoreWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.loadMoreButton {
+  padding: 16px 32px;
+  background-color: rgba(0, 57, 42, 1);
+  color: white;
+  border: none;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.loadMoreButton:hover {
+  background-color: rgba(0, 77, 62, 1);
+}
+
+/* Попап */
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+  overflow-y: auto;
+  /*max-height: 900px;*/
+}
+
+.popupContent {
+  background-color: white;
+  padding: 68px;
+  border-radius: 8px;
+  max-width: 1250px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.popupColumns {
+  display: flex;
+  height: 100%;
+}
+
+.popupImageColumn {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popupInfoColumn {
+  flex: 1;
+  padding: 0 68px;
+}
+
+.popupRows {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.popupTopImage {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+}
+
+.popupBottomInfo {
+  width: 100%;
+  padding: 0 0px;
+}
+
+.popupImageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 700px;
+  width: 100%;
+}
+
+.popupImage {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 50px;
+  cursor: pointer;
+  z-index: 20;
+}
+
+.popupTitle {
+  margin-top: 0;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.popupYear {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.popupDescription {
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+/* Мобильная адаптация (576px и меньше) */
+@media (max-width: 576px) {
+  .paintingsBlock {
+    width: 100%;
+    margin: 40px auto 0;
+    padding: 0 15px;
+    box-sizing: border-box;
+  }
+
+  .container {
+    width: 100%;
+  }
+
+  .title {
+    font-size: 22px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+
+  .buttons {
+    flex-direction: column;
+    gap: 15px;
+    margin: 0 auto 25px;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .activeButton, 
+  .inactiveButton {
+    font-size: 18px;
+    padding: 5px 0;
+    text-align: center;
+  }
+
+  .gallery {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .paintingCard {
+    width: 100%;
+    height: auto;
+    max-width: 350px;
+    margin: 0 auto;
+  }
+
+  .imageContainer {
+    width: 100%;
+    height: 0;
+    padding-bottom: 100%; /* Квадратное соотношение */
+    position: relative;
+  }
+
+  .paintingImage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .paintingInfo {
+    padding: 15px 0;
+  }
+
+  .paintingTitle {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .paintingYear {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .paintingDescription {
+    font-size: 14px;
+  }
+
+  .loadMoreButton {
+    padding: 12px 24px;
+    font-size: 16px;
+  }
+
+  /* Попап адаптация */
+  .popupOverlay {
+    padding: 10px;
+  }
+
+  .popupContent {
+    padding: 20px 15px; /* Уменьшаем отступы */
+    width: 95%; /* Занимает почти всю ширину экрана */
+    max-height: 85vh; /* Чуть меньше, чем было */
+  }
+
+  .popupColumns {
+    flex-direction: column;
+  }
+
+  .popupImageContainer {
+    max-height: 40vh; /* Уменьшаем высоту контейнера */
+    overflow: hidden; /* Обрезаем, если выходит за границы */
+  }
+
+  .popupImageColumn,
+  .popupInfoColumn {
+    padding-top: 10px;
+    flex: none;
+    width: 100%;
+  }
+
+  .popupInfoColumn {
+    padding: 20px 0 0;
+  }
+
+  .popupRows {
+    gap: 15px;
+  }
+
+  .popupTopImage {
+    height: auto;
+  }
+
+  .popupImageContainer {
+    max-height: 50vh;
+  }
+
+  .popupTitle {
+    font-size: 22px;
+    margin-bottom: 15px;
+  }
+
+  .popupYear {
+    font-size: 16px;
+    margin-bottom: 15px;
+  }
+
+  .popupDescription {
+    font-size: 14px;
+  }
+
+  .closeButton {
+    top: 10px;
+    right: 10px;
+    font-size: 28px;
+    background: rgba(255, 255, 255, 0.8); /* Полупрозрачный фон */
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20; /* Увеличиваем z-index */
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .buttons {
+    display: none; /* Полностью скрывает блок */
+  }
+
+  
+}
