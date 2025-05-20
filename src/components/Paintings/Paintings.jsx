@@ -14,7 +14,7 @@ const Paintings = ({ id }) => {
   useEffect(() => {
     const fetchPaintings = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/paintings');
+        const response = await axios.get('https://chistyakov.tech/api/api/paintings');
         setPaintings(response.data);
       } catch (err) {
         console.error('Ошибка при загрузке картин:', err);
@@ -98,7 +98,7 @@ const Paintings = ({ id }) => {
             >
               <div className={styles.imageContainer}>
                 <img 
-                  src={`http://localhost:5000/${painting.image_url}`} 
+                  src={`https://chistyakov.tech/api/${painting.image_url}`} 
                   alt={painting.title} 
                   className={styles.paintingImage}
                   loading="lazy"
@@ -147,7 +147,7 @@ const Paintings = ({ id }) => {
                 <div className={styles.popupImageColumn}>
                   <div className={styles.popupImageContainer}>
                     <img
-                      src={`http://localhost:5000/${selectedPainting.image_url}`}
+                      src={`https://chistyakov.tech/api/${selectedPainting.image_url}`}
                       alt={selectedPainting.title}
                       className={styles.popupImage}
                     />
@@ -164,7 +164,7 @@ const Paintings = ({ id }) => {
                 <div className={styles.popupTopImage}>
                   <div className={styles.popupImageContainer}>
                     <img
-                      src={`http://localhost:5000/${selectedPainting.image_url}`}
+                      src={`https://chistyakov.tech/api/${selectedPainting.image_url}`}
                       alt={selectedPainting.title}
                       className={styles.popupImage}
                     />

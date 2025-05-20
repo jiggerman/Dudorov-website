@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './Dashboard.module.css';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'https://chistyakov.tech/api';
 
 const Dashboard = () => {
   const navigate = useNavigate();
