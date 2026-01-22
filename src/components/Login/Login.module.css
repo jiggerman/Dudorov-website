@@ -3,21 +3,26 @@
 .loginContainer {
     background-color: #00392a; /* Зеленый цвет фона */
     display: flex;
-    max-height: 100%;
     justify-content: center;
     align-items: center;
-    padding: 68px;
+    min-height: 80vh; /* Изменено с max-height на min-height */
+    margin: 0; /* Убираем возможные отступы */
+    box-sizing: border-box; /* Включаем padding в расчет высоты */
   }
+  
+  /* Добавим базовые стили для body/html чтобы убрать отступы */
+  /* Это можно добавить в глобальный стиль или сюда */
   
   .loginWindow {
     width: 610px;
-    height: 385px;
+    min-height: 385px; /* Изменено с height на min-height */
     background-color: white;
     padding: 40px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-sizing: border-box; /* Включаем padding в расчет высоты */
   }
   
   .loginTitle {
@@ -26,6 +31,7 @@
     font-weight: 500;
     color: #00392a;
     margin-bottom: 40px;
+    text-align: center;
   }
   
   .loginForm {
@@ -33,11 +39,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex-grow: 1; /* Позволяет форме занимать доступное пространство */
   }
   
   .inputGroup {
-    width: 467px;
-    margin-bottom: 20px;
+    width: 100%;
+    max-width: 467px;
+    margin-bottom: 25px; /* Увеличим отступ */
   }
   
   .inputLabel {
@@ -46,15 +54,19 @@
     font-size: 16px;
     color: #333;
     margin-bottom: 8px;
+    font-weight: 500;
   }
   
   .inputField {
     width: 100%;
     height: 59px;
-    border:  2px solid #000000;
+    border: 2px solid #000000;
+    border-radius: 4px; /* Добавим скругление */
     padding: 0 15px;
     font-size: 16px;
+    font-family: 'Manrope', sans-serif;
     box-sizing: border-box;
+    transition: border-color 0.3s ease;
   }
   
   .inputField:focus {
@@ -62,11 +74,22 @@
     border-color: #00392a;
   }
   
+  .inputField:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+  }
+  
   .errorMessage {
-    color: red;
+    color: #d32f2f; /* Более мягкий красный */
     font-family: 'Manrope', sans-serif;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     text-align: center;
+    font-size: 14px;
+    padding: 10px;
+    background-color: #ffebee; /* Светло-красный фон */
+    border-radius: 4px;
+    width: 100%;
+    max-width: 467px;
   }
   
   .submitButton {
@@ -75,13 +98,58 @@
     background-color: #00392a;
     color: white;
     border: none;
+    border-radius: 4px; /* Добавим скругление */
     font-family: 'Manrope', sans-serif;
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.3s;
+    margin-top: 20px; /* Добавим отступ сверху */
   }
   
-  .submitButton:hover {
+  .submitButton:hover:not(:disabled) {
     background-color: #00261a;
+  }
+  
+  .submitButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  /* Добавим медиа-запросы для адаптивности */
+  @media (max-width: 768px) {
+    .loginContainer {
+      padding: 20px;
+    }
+    
+    .loginWindow {
+      width: 100%;
+      max-width: 500px;
+      padding: 30px;
+    }
+    
+    .inputGroup {
+      max-width: 100%;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .loginWindow {
+      padding: 20px;
+      min-height: auto;
+    }
+    
+    .loginTitle {
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+    
+    .inputField {
+      height: 50px;
+    }
+    
+    .submitButton {
+      width: 100%;
+      max-width: 200px;
+    }
   }

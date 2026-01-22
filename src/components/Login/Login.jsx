@@ -1,21 +1,51 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.css';
+import { loginUser } from '../../services/api';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setIsLoading(true);
 
-    if (email === 'liggerman@mail.ru' && password === 'admin') {
-      localStorage.setItem('code', '812901');
-      navigate('/verify-code');
-    } else {
-      setError('Неверные логин или пароль');
+    try {
+      // Валидация email
+      if (!email || !email.includes('@')) {
+        setError('Пожалуйста, введите корректный email');
+        setIsLoading(false);
+        return;
+      }
+
+      if (!password) {
+        setError('Пожалуйста, введите пароль');
+        setIsLoading(false);
+        return;
+      }
+
+      // Отправляем запрос на сервер
+      const response = await loginUser(email, password);
+      
+      if (response.success) {
+        // Сохраняем токен в localStorage или context
+        localStorage.setItem('access_token', response.access_token);
+        
+        // Перенаправляем на страницу верификации кода
+        navigate('/verify-code');
+      } else {
+        setError(response.message || 'Неверные логин или пароль');
+      }
+    } catch (err) {
+      setError(err.message || 'Ошибка соединения с сервером');
+      console.error('Login error:', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -32,6 +62,8 @@ const Login = () => {
               onChange={(e) => setEmail(e.target.value)}
               className={styles.inputField}
               required
+              disabled={isLoading}
+              placeholder="Введите email"
             />
           </div>
           <div className={styles.inputGroup}>
@@ -42,11 +74,17 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               className={styles.inputField}
               required
+              disabled={isLoading}
+              placeholder="Введите пароль"
             />
           </div>
           {error && <p className={styles.errorMessage}>{error}</p>}
-          <button type="submit" className={styles.submitButton}>
-            Войти
+          <button 
+            type="submit" 
+            className={styles.submitButton}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Загрузка...' : 'Войти'}
           </button>
         </form>
       </div>
