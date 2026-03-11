@@ -443,71 +443,211 @@ def send_contact_email():
         name = data.get('name', '').strip()
         email = data.get('email', '').strip()
         message = data.get('message', '').strip()
+        want_to_buy = data.get('wantToBuy', False)
+        selected_painting = data.get('selectedPainting', None)
+        painting_title = data.get('paintingTitle', None)
 
+        # Валидация
         if not name:
             return jsonify({'message': 'Пожалуйста, введите ваше имя'}), 400
 
-        if not email or '@' not in email:
+        if not email or '@' not in email or '.' not in email:
             return jsonify({'message': 'Пожалуйста, введите корректный email'}), 400
 
-        if not message:
-            return jsonify({'message': 'Пожалуйста, введите ваше сообщение'}), 400
+        # Для запросов на покупку проверяем наличие выбранной картины
+        if want_to_buy and not selected_painting and not painting_title:
+            return jsonify({'message': 'Пожалуйста, выберите картину для покупки'}), 400
 
         try:
+            # Формируем тему письма
+            if want_to_buy:
+                subject = f'ЗАПРОС НА ПОКУПКУ КАРТИНЫ от {name}'
+            else:
+                subject = f'Новое сообщение с сайта от {name}'
+
             msg = Message(
-                subject=f'Новое сообщение с сайта от {name}',
+                subject=subject,
                 sender=app.config['MAIL_DEFAULT_SENDER'],
                 recipients=[ADMIN_EMAIL]
             )
 
+            # Формируем текст письма
             msg.body = f'''
+            {'=' * 50}
+            {'ЗАПРОС НА ПОКУПКУ КАРТИНЫ' if want_to_buy else 'НОВОЕ СООБЩЕНИЕ С САЙТА'}
+            {'=' * 50}
+
             Имя: {name}
             Email: {email}
             Дата: {datetime.now().strftime("%d.%m.%Y %H:%M")}
 
+            {f'Картина: {painting_title}' if painting_title else ''}
+
             Сообщение:
-            {message}
+            {'-' * 30}
+            {message if message else '(нет комментария)'}
+            {'-' * 30}
+
+            Для ответа на это письмо просто нажмите "Ответить".
             '''
 
             # HTML версия
-            msg.html = f'''
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-                <h2 style="color: #00392a; border-bottom: 2px solid #00392a; padding-bottom: 10px;">
-                    Новое сообщение с сайта
-                </h2>
+            html_content = f'''
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <style>
+                    body {{ font-family: 'Manrope', Arial, sans-serif; line-height: 1.6; }}
+                    .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                    .header {{ 
+                        background: linear-gradient(135deg, #00392a 0%, #1a5a48 100%);
+                        color: white; 
+                        padding: 20px; 
+                        text-align: center;
+                        border-radius: 5px 5px 0 0;
+                    }}
+                    .header h1 {{ margin: 0; font-size: 24px; font-weight: 500; }}
+                    .content {{ 
+                        background-color: #ffffff; 
+                        padding: 30px; 
+                        border: 1px solid #e0e0e0;
+                        border-top: none;
+                        border-radius: 0 0 5px 5px;
+                    }}
+                    .info-block {{ 
+                        background-color: #f8f9fa; 
+                        padding: 20px; 
+                        border-radius: 5px; 
+                        margin: 20px 0;
+                        border-left: 4px solid #00392a;
+                    }}
+                    .info-item {{ margin-bottom: 15px; }}
+                    .info-label {{ 
+                        font-weight: 600; 
+                        color: #00392a; 
+                        display: block; 
+                        margin-bottom: 5px;
+                        text-transform: uppercase;
+                        font-size: 14px;
+                    }}
+                    .info-value {{ 
+                        color: #333; 
+                        font-size: 16px;
+                        word-break: break-word;
+                    }}
+                    .message-box {{ 
+                        background-color: #fff; 
+                        border: 2px solid #00392a;
+                        padding: 20px; 
+                        border-radius: 5px; 
+                        margin: 20px 0;
+                        white-space: pre-line;
+                    }}
+                    .footer {{ 
+                        margin-top: 30px; 
+                        padding-top: 20px; 
+                        border-top: 2px solid #e0e0e0;
+                        color: #666; 
+                        font-size: 14px;
+                        text-align: center;
+                    }}
+                    .badge {{
+                        display: inline-block;
+                        padding: 5px 10px;
+                        border-radius: 3px;
+                        font-size: 12px;
+                        font-weight: 600;
+                        text-transform: uppercase;
+                    }}
+                    .badge-purchase {{
+                        background-color: #00392a;
+                        color: white;
+                    }}
+                    .badge-contact {{
+                        background-color: #666;
+                        color: white;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>{'ЗАПРОС НА ПОКУПКУ КАРТИНЫ' if want_to_buy else 'НОВОЕ СООБЩЕНИЕ С САЙТА'}</h1>
+                    </div>
 
-                <div style="margin: 20px 0;">
-                    <p><strong>Имя:</strong> {name}</p>
-                    <p><strong>Email:</strong> <a href="mailto:{email}" style="color: #00392a;">{email}</a></p>
-                    <p><strong>Дата:</strong> {datetime.now().strftime("%d.%m.%Y %H:%M")}</p>
-                </div>
+                    <div class="content">
+                        <div style="margin-bottom: 20px;">
+                            <span class="badge {'badge-purchase' if want_to_buy else 'badge-contact'}">
+                                {'🖼️ Запрос на покупку' if want_to_buy else '📧 Контактная форма'}
+                            </span>
+                        </div>
 
-                <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
-                    <h3 style="color: #00392a; margin-top: 0;">Сообщение:</h3>
-                    <p style="white-space: pre-line; line-height: 1.6;">{message}</p>
-                </div>
+                        <div class="info-block">
+                            <div class="info-item">
+                                <span class="info-label">👤 Имя</span>
+                                <span class="info-value">{name}</span>
+                            </div>
 
-                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
-                    <p style="color: #666; font-size: 14px;">
-                        Для ответа нажмите "Ответить" в вашем почтовом клиенте.
-                    </p>
+                            <div class="info-item">
+                                <span class="info-label">📧 Email</span>
+                                <span class="info-value">
+                                    <a href="mailto:{email}" style="color: #00392a; text-decoration: none;">{email}</a>
+                                </span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">📅 Дата</span>
+                                <span class="info-value">{datetime.now().strftime("%d.%m.%Y %H:%M")}</span>
+                            </div>
+
+                            {f"""
+                            <div class="info-item">
+                                <span class="info-label">🖼️ Картина</span>
+                                <span class="info-value">{painting_title}</span>
+                            </div>""" if painting_title else ''}
+
+                        </div>
+
+                        <div class="info-item">
+                            <span class="info-label">💬 Сообщение</span>
+                            <div class="message-box">
+                                {message if message else '<em style="color: #999;">(нет комментария)</em>'}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </body>
+            </html>
             '''
 
+            msg.html = html_content
             mail.send(msg)
-            logger.info(f"Контактное сообщение от {name} ({email}) отправлено админу")
 
-            return jsonify({'message': 'Сообщение успешно отправлено'}), 200
+            logger.info(
+                f"{'Запрос на покупку' if want_to_buy else 'Контактное сообщение'} от {name} ({email}) отправлен админу")
+
+            # Возвращаем успешный ответ
+            return jsonify({
+                'success': True,
+                'message': 'Сообщение успешно отправлено'
+            }), 200
 
         except Exception as mail_err:
             logger.error(f"Ошибка отправки email: {mail_err}")
 
-            return jsonify({'message': 'Сообщение получено'}), 200
+            # Временно возвращаем успех для разработки
+            return jsonify({
+                'success': True,
+                'message': 'Сообщение получено (тестовый режим)'
+            }), 200
 
     except Exception as err:
         logger.error(f"Ошибка обработки контактной формы: {err}")
-        return jsonify({'message': 'Внутренняя ошибка сервера'}), 500
+        return jsonify({
+            'success': False,
+            'message': 'Внутренняя ошибка сервера'
+        }), 500
 
 
 if __name__ == '__main__':
