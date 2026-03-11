@@ -12,19 +12,35 @@ const Footer = () => {
         <div className={styles.columnsContainer}>
           <div className={styles.columns}>
             <div className={styles.column}>
-              <p><b>© 2025 Санкт-Петербургский политехнический университет Петра Великого (СПбПУ)</b></p>
+              <a 
+                href="https://www.spbstu.ru/" 
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <b>© 2026 Санкт-Петербургский политехнический университет Петра Великого (СПбПУ)</b></a>
               <p>При использовании материалов портала активная ссылка на источник обязательна</p>
             </div>
             
             <div className={styles.column}>
-              <p>Политика конфиденциальности</p>
-              <p>Положение об использовании «cookie» файлов</p>
+              <a 
+                href="https://www.spbstu.ru/upload/personal_data_policy.pdf" 
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: 'none', color: 'inherit',  display: 'block' }}
+              >Политика конфиденциальности</a>
+              <a 
+                href="https://www.spbstu.ru/upload/personal_cookie.pdf" 
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: 'none', color: 'inherit',  display: 'block' }}
+              >Положение об использовании «cookie» файлов</a>
             </div>
             
             <div className={styles.column}>
               <p>Контакты</p>
-              <p>пр-т. Энгельса, 23, Санкт-Петербург, 194156</p>
-              <p>+7 (999) 999 99 99</p>
+              <p>194156, Санкт-Петербург пр. Энгельса, д. 23</p>
+              <p>+7(921)915 4329</p>
             </div>
           </div>
         </div>

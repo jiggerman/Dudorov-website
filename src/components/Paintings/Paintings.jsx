@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Paintings.module.css';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = 'http://127.0.0.1:5000';
 
 const Paintings = ({ id }) => {
+  const navigate = useNavigate();
   const [visibleCount, setVisibleCount] = useState(8);
   const [selectedPainting, setSelectedPainting] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [paintings, setPaintings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('gallery'); // 'gallery' или 'sale'
+  const [activeTab, setActiveTab] = useState('gallery');
 
   // Загрузка картин из API
   useEffect(() => {
@@ -19,15 +21,13 @@ const Paintings = ({ id }) => {
       setLoading(true);
       setError(null);
       try {
-        // Определяем параметр запроса в зависимости от активной вкладки
         const isOnSale = activeTab === 'sale';
         const response = await axios.get(`${API_BASE_URL}/api/paintings`, {
           params: { on_sale: isOnSale }
         });
         
-        console.log('Получены картины:', response.data); // Для отладки
+        console.log('Получены картины:', response.data);
         
-        // Добавляем правильные URL изображений
         const paintingsWithUrls = response.data.map(painting => ({
           ...painting,
           imageUrl: painting.image_path 
@@ -40,7 +40,6 @@ const Paintings = ({ id }) => {
         }));
         
         setPaintings(paintingsWithUrls);
-        // Сбрасываем счетчик видимых картин при смене вкладки
         setVisibleCount(8);
       } catch (err) {
         console.error('Ошибка при загрузке картин:', err);
@@ -51,7 +50,7 @@ const Paintings = ({ id }) => {
     };
 
     fetchPaintings();
-  }, [activeTab]); // Перезагружаем картины при смене вкладки
+  }, [activeTab]);
 
   const visiblePaintings = paintings.slice(0, visibleCount);
 
@@ -71,6 +70,25 @@ const Paintings = ({ id }) => {
   const closePopup = () => {
     setIsPopupOpen(false);
     document.body.style.overflow = 'auto';
+  };
+
+  // Функция для перехода к контактам с предзаполненной информацией
+  const handleContactClick = (painting) => {
+    // Сохраняем информацию о картине в sessionStorage для предзаполнения формы
+    sessionStorage.setItem('selectedPainting', JSON.stringify({
+      id: painting.id,
+      title: painting.title,
+      wantToBuy: true
+    }));
+    
+    // Закрываем попап
+    closePopup();
+    
+    // Плавный скролл к секции контактов
+    const contactsSection = document.getElementById('contacts');
+    if (contactsSection) {
+      contactsSection.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   // Функция для получения URL изображения
@@ -172,9 +190,6 @@ const Paintings = ({ id }) => {
                           e.target.src = '/placeholder.jpg';
                         }}
                       />
-                      {painting.on_sale && activeTab === 'sale' && (
-                        <div className={styles.saleBadge}>На продажу</div>
-                      )}
                     </div>
                     <div className={styles.paintingInfo}>
                       <h3 className={styles.paintingTitle}>{painting.title}</h3>
@@ -184,8 +199,6 @@ const Paintings = ({ id }) => {
                         <div className={styles.priceInfo}>
                           <p className={styles.priceLabel}>Цена:</p>
                           <p className={styles.price}>По запросу</p>
-                          {/* Если у вас есть поле с ценой, добавьте его здесь */}
-                          {/* <p className={styles.price}>{painting.price} руб.</p> */}
                         </div>
                       )}
                     </div>
@@ -235,9 +248,6 @@ const Paintings = ({ id }) => {
                         e.target.src = '/placeholder.jpg';
                       }}
                     />
-                    {selectedPainting.on_sale && (
-                      <div className={styles.popupSaleBadge}>На продажу</div>
-                    )}
                   </div>
                 </div>
                 <div className={styles.popupInfoColumn}>
@@ -248,10 +258,12 @@ const Paintings = ({ id }) => {
                     <div className={styles.popupPriceInfo}>
                       <h4 className={styles.popupPriceTitle}>Информация о покупке:</h4>
                       <p className={styles.popupPrice}>Цена: по запросу</p>
-                      <button className={styles.contactButton}>
+                      <button 
+                        className={styles.contactButton}
+                        onClick={() => handleContactClick(selectedPainting)}
+                      >
                         Связаться для покупки
                       </button>
-                      {/* Добавьте здесь свою контактную информацию или форму */}
                     </div>
                   )}
                 </div>
@@ -269,9 +281,6 @@ const Paintings = ({ id }) => {
                         e.target.src = '/placeholder.jpg';
                       }}
                     />
-                    {selectedPainting.on_sale && (
-                      <div className={styles.popupSaleBadge}>На продажу</div>
-                    )}
                   </div>
                 </div>
                 <div className={styles.popupBottomInfo}>
@@ -282,7 +291,10 @@ const Paintings = ({ id }) => {
                     <div className={styles.popupPriceInfo}>
                       <h4 className={styles.popupPriceTitle}>Информация о покупке:</h4>
                       <p className={styles.popupPrice}>Цена: по запросу</p>
-                      <button className={styles.contactButton}>
+                      <button 
+                        className={styles.contactButton}
+                        onClick={() => handleContactClick(selectedPainting)}
+                      >
                         Связаться для покупки
                       </button>
                     </div>

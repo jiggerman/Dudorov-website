@@ -960,6 +960,170 @@ const Dashboard = () => {
         </Box>
       )}
 
+            {/* Модальное окно добавления */}
+      <Dialog 
+        open={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        maxWidth="sm" 
+        fullWidth
+        PaperProps={{
+          sx: { maxWidth: '500px' }
+        }}
+      >
+        <DialogTitle sx={{ pb: 1 }}>Добавить новую картину</DialogTitle>
+        <DialogContent dividers>
+          <PopupColumn>
+            {/* Изображение */}
+            <Box>
+              <InputLabel sx={{ mb: 1, fontWeight: 500 }}>Изображение *</InputLabel>
+              <UploadArea onClick={() => fileInputRef.current.click()}>
+                {newPainting.preview ? (
+                  <>
+                    <img
+                      src={newPainting.preview}
+                      alt="Preview"
+                      style={{
+                        width: '100%',
+                        maxHeight: '300px',
+                        objectFit: 'contain',
+                        marginBottom: '10px'
+                      }}
+                    />
+                    <Typography variant="caption" color="text.secondary">
+                      {newPainting.image?.name}
+                    </Typography>
+                  </>
+                ) : (
+                  <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
+                    <ImageIcon sx={{ fontSize: 64, color: 'grey.400' }} />
+                    <Typography variant="body1" color="text.secondary">
+                      Нажмите для загрузки изображения
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      Рекомендуемый размер: квадратное или близкое к нему
+                    </Typography>
+                  </Box>
+                )}
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  required
+                />
+              </UploadArea>
+            </Box>
+
+            <Divider />
+
+            {/* Основные поля */}
+            <TextField
+              fullWidth
+              label="Название картины *"
+              value={newPainting.title}
+              onChange={(e) => setNewPainting({...newPainting, title: e.target.value})}
+              required
+              size="small"
+            />
+
+            <Box>
+              <InputLabel sx={{ mb: 1, fontWeight: 500 }}>Описание</InputLabel>
+              <StyledTextarea
+                value={newPainting.description}
+                onChange={(e) => setNewPainting({...newPainting, description: e.target.value})}
+                placeholder="Введите описание картины..."
+                minRows={3}
+              />
+            </Box>
+
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Год создания"
+                  value={newPainting.year}
+                  onChange={(e) => setNewPainting({...newPainting, year: e.target.value})}
+                  type="number"
+                  size="small"
+                />
+              </Grid>
+              
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Тип отображения</InputLabel>
+                  <Select
+                    value={newPainting.popup_view}
+                    onChange={(e) => setNewPainting({...newPainting, popup_view: parseInt(e.target.value)})}
+                    label="Тип отображения"
+                  >
+                    <MenuItem value={1}>Вертикальный</MenuItem>
+                    <MenuItem value={2}>Горизонтальный</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+
+            {/* Дополнительные поля */}
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Настроение"
+                  value={newPainting.mood}
+                  onChange={(e) => setNewPainting({...newPainting, mood: e.target.value})}
+                  size="small"
+                  placeholder="например: спокойное"
+                />
+              </Grid>
+              
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Сезон"
+                  value={newPainting.season}
+                  onChange={(e) => setNewPainting({...newPainting, season: e.target.value})}
+                  size="small"
+                  placeholder="например: весна"
+                />
+              </Grid>
+            </Grid>
+
+            {/* Статус на продажу */}
+            <Box sx={{ mt: 1 }}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={newPainting.on_sale}
+                    onChange={(e) => setNewPainting({...newPainting, on_sale: e.target.checked})}
+                    color="success"
+                  />
+                }
+                label="Выставить на продажу"
+              />
+              {newPainting.on_sale && (
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+                  Картина будет отображаться в разделе продаж и в основной галерее
+                </Typography>
+              )}
+            </Box>
+          </PopupColumn>
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={() => { resetForm(); setIsModalOpen(false); }}>
+            Отмена
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleSaveNew}
+            disabled={!newPainting.title || !newPainting.image}
+            sx={{ bgcolor: '#00392a', minWidth: '120px' }}
+          >
+            Сохранить
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {/* Модальное окно редактирования */}
       <Dialog 
         open={isEditModalOpen} 

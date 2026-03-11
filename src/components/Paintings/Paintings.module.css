@@ -404,3 +404,86 @@
 
   
 }
+
+/* Стили для кнопки связи */
+.contactButton {
+  width: 220px;
+  height: 50px;
+  border: 2px solid #00392a;
+  background: transparent;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: #00392a;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+  border-radius: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.contactButton:hover {
+  background: #00392a;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 57, 42, 0.2);
+}
+
+.contactButton:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Стили для бейджа "На продажу" в попапе */
+.popupSaleBadge {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #00392a;
+  color: white;
+  padding: 8px 16px;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  z-index: 10;
+  border: 2px solid #ffffff;
+}
+
+/* Улучшенные стили для информации о цене в попапе */
+.popupPriceInfo {
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 2px solid #e0e0e0;
+}
+
+.popupPriceTitle {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: #00392a;
+  margin-bottom: 10px;
+}
+
+.popupPrice {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  font-size: 24px;
+  color: #00392a;
+  margin-bottom: 20px;
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 768px) {
+  .contactButton {
+    width: 180px;
+    height: 45px;
+    font-size: 14px;
+  }
+  
+  .popupPrice {
+    font-size: 20px;
+  }
+}

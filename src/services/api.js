@@ -47,14 +47,13 @@ export const verifyCode = async (code) => {
       };
     }
 
-    // Отправляем код как число
     const response = await fetch(`${API_URL}/code_2f`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({ code: code }), // code уже число
+      body: JSON.stringify({ code: code }),
     });
 
     const data = await response.json();
@@ -145,7 +144,6 @@ export const getPaintings = async () => {
     throw error;
   }
 };
-// services/api.js - добавить функцию sendContactMessage
 
 export const sendContactMessage = async (formData) => {
   try {
