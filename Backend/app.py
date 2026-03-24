@@ -51,6 +51,7 @@ email_sender = os.getenv('MAIL_USERNAME')
 
 # Инициализация базы данных
 db = Database()
+db.create_tables()
 
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL")
 ADMIN_PASSWORD_HASH = bcrypt.generate_password_hash(os.getenv("ADMIN_PASSWORD")).decode('utf-8')
